@@ -1,0 +1,28 @@
+<svg width="1000" height="250" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @font-face {
+        font-family: 'Moderniz';
+        src: url('/fonts/Moderniz.ttf') format('truetype');
+      }
+    </style>
+    <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6600;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8800;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
+      <feOffset dx="0" dy="10" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" 
+        font-family="'Moderniz', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif" font-size="150" font-weight="normal" 
+        letter-spacing="-2" fill="url(#orangeGradient)" filter="url(#shadow)">CREATE</text>
+</svg>

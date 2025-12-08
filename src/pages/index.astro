@@ -1,5 +1,5 @@
 ---
-// Minimal Astro page
+// Creative Gallery Hero Page
 ---
 
 <!doctype html>
@@ -8,11 +8,542 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Creative Gallery — Astro</title>
+    <style>
+      @font-face {
+        font-family: 'Moderniz';
+        src: url('/fonts/Moderniz.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to bottom, #f5f5f5 0%, #ffffff 100%);
+        min-height: 100vh;
+      }
+
+      /* Navbar Styles */
+      .navbar {
+        background-color: #000000;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .navbar-brand {
+        color: #ffffff;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      .navbar-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .navbar-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+        padding-bottom: 0.25rem;
+      }
+
+      .navbar-links a:hover,
+      .navbar-links a.active {
+        color: #ff6600;
+        border-bottom: 2px solid #ff6600;
+      }
+
+      /* Hero Section */
+      .hero-section {
+        position: relative;
+        min-height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        overflow: hidden;
+      }
+
+      /* Orange Wave Background */
+      .wave-background {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 34%;
+        background: linear-gradient(135deg, #ff6600 0%, #ff8800 100%);
+        clip-path: ellipse(120% 100% at 50% 100%);
+        z-index: 1;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 900px;
+      }
+
+      .hero-title-img {
+        width: 100%;
+        max-width: 1500px;
+        height: auto;
+        margin-bottom: -2rem;
+        filter: drop-shadow(0 10px 30px rgba(255, 102, 0, 0.3));
+        -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 100%);
+        mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 100%);
+      }
+
+      .hero-subtitle {
+        font-size: 1.75rem;
+        color: #333;
+        font-weight: 400;
+        margin-top: 0;
+        margin-bottom: 2.5rem;
+        letter-spacing: 0.5px;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        margin-bottom: 2rem;
+      }
+
+      .btn {
+        padding: 1rem 3rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-primary {
+        background-color: #ff6600;
+        color: #ffffff;
+      }
+
+      .btn-primary:hover {
+        background-color: #ff8800;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(255, 102, 0, 0.3);
+      }
+
+      .btn-secondary {
+        background-color: #ff6600;
+        color: #ffffff;
+      }
+
+      .btn-secondary:hover {
+        background-color: #ff8800;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(255, 102, 0, 0.3);
+      }
+
+      .hero-description {
+        max-width: 600px;
+        margin: 3rem auto 0;
+        color: #333333;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      /* Category Pills */
+      .category-pills {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        z-index: 3;
+        padding: 0 2rem;
+      }
+
+      .pill {
+        background-color: #ffffff;
+        color: #333333;
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .pill:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Media Carousel Section */
+      .media-carousel-section {
+        padding: 4rem 2rem;
+        background-color: #ffffff;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 3rem;
+        font-weight: 700;
+      }
+
+      .carousel-container {
+        position: relative;
+        max-width: 1200px;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+
+      .carousel-wrapper {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+      }
+
+      .carousel-item {
+        min-width: 100%;
+        display: flex;
+        gap: 2rem;
+        padding: 0 1rem;
+      }
+
+      .media-card {
+        flex: 1;
+        background-color: #f5f5f5;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .media-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      .media-placeholder {
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .media-placeholder::before {
+        content: '';
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background-color: rgba(255, 102, 0, 0.2);
+        border-radius: 50%;
+      }
+
+      .placeholder-icon {
+        font-size: 3rem;
+        color: #ff6600;
+        z-index: 1;
+      }
+
+      .media-info {
+        padding: 1.5rem;
+      }
+
+      .media-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .media-type {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background-color: #ff6600;
+        color: #ffffff;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+
+      /* Carousel Navigation */
+      .carousel-nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .carousel-btn {
+        background-color: #ff6600;
+        color: #ffffff;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .carousel-btn:hover {
+        background-color: #ff8800;
+        transform: scale(1.1);
+      }
+
+      .carousel-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        transform: scale(1);
+      }
+
+      .carousel-dots {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #ddd;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .dot.active {
+        background-color: #ff6600;
+        width: 30px;
+        border-radius: 6px;
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .navbar-links {
+          gap: 1rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1.5rem;
+        }
+
+        .hero-buttons {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .btn {
+          width: 100%;
+        }
+
+        .category-pills {
+          bottom: 1rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <main>
-      <h1>Welcome to Creative Gallery (Astro)</h1>
-      <p>This is a minimal Astro scaffold. Start building your site in <code>src/</code>.</p>
-    </main>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="/" class="navbar-brand">Create</a>
+      <ul class="navbar-links">
+        <li><a href="/" class="active">Home</a></li>
+        <li><a href="/your-works">Your Works</a></li>
+        <li><a href="/settings">Settings</a></li>
+      </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="wave-background"></div>
+      
+      <div class="hero-content">
+        <img src="/hero-title.svg" alt="CREATE" class="hero-title-img" />
+        
+        <div class="hero-subtitle">Upload now and Vote!</div>
+        
+        <div class="hero-buttons">
+          <a href="/creatives" class="btn btn-primary">See Creatives</a>
+          <a href="/learn-more" class="btn btn-secondary">Learn More</a>
+        </div>
+        
+        <p class="hero-description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+          ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </p>
+      </div>
+
+      <!-- Category Pills -->
+      <div class="category-pills">
+        <span class="pill">Short Films</span>
+        <span class="pill">Long Forms</span>
+        <span class="pill">Short Forms</span>
+        <span class="pill">Photo</span>
+        <span class="pill">Cinematography</span>
+      </div>
+    </section>
+
+    <!-- Media Carousel Section -->
+    <section class="media-carousel-section">
+      <h2 class="section-title">Featured Creatives</h2>
+      
+      <div class="carousel-container">
+        <div class="carousel-wrapper" id="carouselWrapper">
+          <!-- Slide 1 -->
+          <div class="carousel-item">
+            <div class="media-card">
+              <div class="media-placeholder">
+                <span class="placeholder-icon">▶</span>
+              </div>
+              <div class="media-info">
+                <h3 class="media-title">Creative Video Title</h3>
+                <span class="media-type">Video</span>
+              </div>
+            </div>
+            <div class="media-card">
+              <div class="media-placeholder">
+                <span class="placeholder-icon">🖼</span>
+              </div>
+              <div class="media-info">
+                <h3 class="media-title">Creative Image Title</h3>
+                <span class="media-type">Image</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="carousel-item">
+            <div class="media-card">
+              <div class="media-placeholder">
+                <span class="placeholder-icon">▶</span>
+              </div>
+              <div class="media-info">
+                <h3 class="media-title">Another Video Project</h3>
+                <span class="media-type">Video</span>
+              </div>
+            </div>
+            <div class="media-card">
+              <div class="media-placeholder">
+                <span class="placeholder-icon">🖼</span>
+              </div>
+              <div class="media-info">
+                <h3 class="media-title">Photography Work</h3>
+                <span class="media-type">Image</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="carousel-item">
+            <div class="media-card">
+              <div class="media-placeholder">
+                <span class="placeholder-icon">▶</span>
+              </div>
+              <div class="media-info">
+                <h3 class="media-title">Short Film Showcase</h3>
+                <span class="media-type">Video</span>
+              </div>
+            </div>
+            <div class="media-card">
+              <div class="media-placeholder">
+                <span class="placeholder-icon">🖼</span>
+              </div>
+              <div class="media-info">
+                <h3 class="media-title">Digital Art Piece</h3>
+                <span class="media-type">Image</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carousel Navigation -->
+      <div class="carousel-nav">
+        <button class="carousel-btn" id="prevBtn" onclick="moveCarousel(-1)">‹</button>
+        <div class="carousel-dots" id="dotsContainer"></div>
+        <button class="carousel-btn" id="nextBtn" onclick="moveCarousel(1)">›</button>
+      </div>
+    </section>
+
+    <script>
+      let currentSlide = 0;
+      const slides = document.querySelectorAll('.carousel-item');
+      const totalSlides = slides.length;
+      const wrapper = document.getElementById('carouselWrapper');
+      const dotsContainer = document.getElementById('dotsContainer');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      // Create dots
+      for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        if (i === 0) dot.classList.add('active');
+        dot.onclick = () => goToSlide(i);
+        dotsContainer.appendChild(dot);
+      }
+
+      function updateCarousel() {
+        wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+        
+        // Update dots
+        document.querySelectorAll('.dot').forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentSlide);
+        });
+
+        // Update button states
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === totalSlides - 1;
+      }
+
+      function moveCarousel(direction) {
+        currentSlide += direction;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+        updateCarousel();
+      }
+
+      function goToSlide(index) {
+        currentSlide = index;
+        updateCarousel();
+      }
+
+      // Initialize
+      updateCarousel();
+    </script>
   </body>
 </html>
