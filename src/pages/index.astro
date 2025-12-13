@@ -1,549 +1,170 @@
 ---
-// Creative Gallery Hero Page
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import MediaCard from '../components/MediaCard.astro';
+
+const carouselRows = [
+  {
+    id: 'row-1',
+    title: 'Trending Projects',
+    items: [
+      { title: 'Creative Video Title', type: 'Video', icon: '▶' },
+      { title: 'Creative Image Title', type: 'Image', icon: '🖼' },
+      { title: 'Documentary Short', type: 'Video', icon: '▶' },
+      { title: 'Abstract Design', type: 'Image', icon: '🖼' },
+      { title: 'Motion Graphics', type: 'Video', icon: '▶' },
+      { title: 'Brand Identity', type: 'Image', icon: '🖼' },
+      { title: 'Film Reel', type: 'Video', icon: '▶' },
+      { title: 'Photography Series', type: 'Image', icon: '🖼' }
+    ]
+  },
+  {
+    id: 'row-2',
+    title: 'Featured Creatives',
+    items: [
+      { title: 'Another Video Project', type: 'Video', icon: '▶' },
+      { title: 'Photography Work', type: 'Image', icon: '🖼' },
+      { title: 'Urban Landscapes', type: 'Image', icon: '🖼' },
+      { title: 'Digital Illustration', type: 'Image', icon: '🖼' },
+      { title: 'Short Film', type: 'Video', icon: '▶' },
+      { title: 'Product Design', type: 'Image', icon: '🖼' },
+      { title: 'Animation Loop', type: 'Video', icon: '▶' },
+      { title: 'Editorial Design', type: 'Image', icon: '🖼' }
+    ]
+  },
+  {
+    id: 'row-3',
+    title: 'Popular This Week',
+    items: [
+      { title: 'Short Film Showcase', type: 'Video', icon: '▶' },
+      { title: 'Digital Art Piece', type: 'Image', icon: '🖼' },
+      { title: 'Cinematic Reel', type: 'Video', icon: '▶' },
+      { title: 'UI/UX Design', type: 'Image', icon: '🖼' },
+      { title: 'Music Video', type: 'Video', icon: '▶' },
+      { title: 'Typography Work', type: 'Image', icon: '🖼' },
+      { title: 'Commercial Spot', type: 'Video', icon: '▶' },
+      { title: 'Packaging Design', type: 'Image', icon: '🖼' }
+    ]
+  },
+  {
+    id: 'row-4',
+    title: 'Recommended For You',
+    items: [
+      { title: 'Portrait Series', type: 'Image', icon: '🖼' },
+      { title: 'Animation Project', type: 'Video', icon: '▶' },
+      { title: 'Abstract Art', type: 'Image', icon: '🖼' },
+      { title: 'Documentary', type: 'Video', icon: '▶' },
+      { title: 'Fashion Photography', type: 'Image', icon: '🖼' },
+      { title: '3D Rendering', type: 'Image', icon: '🖼' },
+      { title: 'Explainer Video', type: 'Video', icon: '▶' },
+      { title: 'Logo Design', type: 'Image', icon: '🖼' }
+    ]
+  },
+  {
+    id: 'row-5',
+    title: 'Latest Uploads',
+    items: [
+      { title: 'Music Video', type: 'Video', icon: '▶' },
+      { title: 'Nature Photography', type: 'Image', icon: '🖼' },
+      { title: 'Behind the Scenes', type: 'Video', icon: '▶' },
+      { title: 'Poster Design', type: 'Image', icon: '🖼' },
+      { title: 'Time Lapse', type: 'Video', icon: '▶' },
+      { title: 'Architecture Photo', type: 'Image', icon: '🖼' },
+      { title: 'Promo Video', type: 'Video', icon: '▶' },
+      { title: 'Web Design', type: 'Image', icon: '🖼' }
+    ]
+  }
+];
+
+const categories = ['Short Films', 'Long Forms', 'Short Forms', 'Photo', 'Cinematography'];
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Creative Gallery — Astro</title>
-    <style>
-      @font-face {
-        font-family: 'Moderniz';
-        src: url('/fonts/Moderniz.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
+<BaseLayout title="Creative Gallery — Astro">
+  <Navbar />
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: 'Arial', sans-serif;
-        background: linear-gradient(to bottom, #f5f5f5 0%, #ffffff 100%);
-        min-height: 100vh;
-      }
-
-      /* Navbar Styles */
-      .navbar {
-        background-color: #000000;
-        padding: 1rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-      }
-
-      .navbar-brand {
-        color: #ffffff;
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-decoration: none;
-      }
-
-      .navbar-links {
-        display: flex;
-        gap: 2rem;
-        list-style: none;
-      }
-
-      .navbar-links a {
-        color: #ffffff;
-        text-decoration: none;
-        font-size: 1rem;
-        transition: color 0.3s ease;
-        padding-bottom: 0.25rem;
-      }
-
-      .navbar-links a:hover,
-      .navbar-links a.active {
-        color: #ff6600;
-        border-bottom: 2px solid #ff6600;
-      }
-
-      /* Hero Section */
-      .hero-section {
-        position: relative;
-        min-height: calc(100vh - 60px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        overflow: hidden;
-      }
-
-      /* Orange Wave Background */
-      .wave-background {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 34%;
-        background: linear-gradient(135deg, #ff6600 0%, #ff8800 100%);
-        clip-path: ellipse(120% 100% at 50% 100%);
-        z-index: 1;
-      }
-
-      .hero-content {
-        position: relative;
-        z-index: 2;
-        text-align: center;
-        max-width: 900px;
-      }
-
-      .hero-title-img {
-        width: 100%;
-        max-width: 1500px;
-        height: auto;
-        margin-bottom: -2rem;
-        filter: drop-shadow(0 10px 30px rgba(255, 102, 0, 0.3));
-        -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 100%);
-        mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 100%);
-      }
-
-      .hero-subtitle {
-        font-size: 1.75rem;
-        color: #333;
-        font-weight: 400;
-        margin-top: 0;
-        margin-bottom: 2.5rem;
-        letter-spacing: 0.5px;
-      }
-
-      .hero-buttons {
-        display: flex;
-        gap: 2rem;
-        justify-content: center;
-        margin-bottom: 2rem;
-      }
-
-      .btn {
-        padding: 1rem 3rem;
-        font-size: 1.25rem;
-        font-weight: 600;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-      }
-
-      .btn-primary {
-        background-color: #ff6600;
-        color: #ffffff;
-      }
-
-      .btn-primary:hover {
-        background-color: #ff8800;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(255, 102, 0, 0.3);
-      }
-
-      .btn-secondary {
-        background-color: #ff6600;
-        color: #ffffff;
-      }
-
-      .btn-secondary:hover {
-        background-color: #ff8800;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(255, 102, 0, 0.3);
-      }
-
-      .hero-description {
-        max-width: 600px;
-        margin: 3rem auto 0;
-        color: #333333;
-        font-size: 1rem;
-        line-height: 1.6;
-      }
-
-      /* Category Pills */
-      .category-pills {
-        position: absolute;
-        bottom: 2rem;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-        z-index: 3;
-        padding: 0 2rem;
-      }
-
-      .pill {
-        background-color: #ffffff;
-        color: #333333;
-        padding: 0.5rem 1.5rem;
-        border-radius: 25px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-      }
-
-      .pill:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      }
-
-      /* Media Carousel Section */
-      .media-carousel-section {
-        padding: 4rem 2rem;
-        background-color: #ffffff;
-        max-width: 1400px;
-        margin: 0 auto;
-      }
-
-      .section-title {
-        text-align: center;
-        font-size: 2.5rem;
-        color: #333;
-        margin-bottom: 3rem;
-        font-weight: 700;
-      }
-
-      .carousel-container {
-        position: relative;
-        max-width: 1200px;
-        margin: 0 auto;
-        overflow: hidden;
-      }
-
-      .carousel-wrapper {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-      }
-
-      .carousel-item {
-        min-width: 100%;
-        display: flex;
-        gap: 2rem;
-        padding: 0 1rem;
-      }
-
-      .media-card {
-        flex: 1;
-        background-color: #f5f5f5;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-      }
-
-      .media-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-      }
-
-      .media-placeholder {
-        width: 100%;
-        height: 400px;
-        background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-      }
-
-      .media-placeholder::before {
-        content: '';
-        position: absolute;
-        width: 80px;
-        height: 80px;
-        background-color: rgba(255, 102, 0, 0.2);
-        border-radius: 50%;
-      }
-
-      .placeholder-icon {
-        font-size: 3rem;
-        color: #ff6600;
-        z-index: 1;
-      }
-
-      .media-info {
-        padding: 1.5rem;
-      }
-
-      .media-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 0.5rem;
-      }
-
-      .media-type {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        background-color: #ff6600;
-        color: #ffffff;
-        border-radius: 15px;
-        font-size: 0.85rem;
-        font-weight: 500;
-      }
-
-      /* Carousel Navigation */
-      .carousel-nav {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 2rem;
-        margin-top: 2rem;
-      }
-
-      .carousel-btn {
-        background-color: #ff6600;
-        color: #ffffff;
-        border: none;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        font-size: 1.5rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .carousel-btn:hover {
-        background-color: #ff8800;
-        transform: scale(1.1);
-      }
-
-      .carousel-btn:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-        transform: scale(1);
-      }
-
-      .carousel-dots {
-        display: flex;
-        gap: 0.5rem;
-      }
-
-      .dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background-color: #ddd;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-
-      .dot.active {
-        background-color: #ff6600;
-        width: 30px;
-        border-radius: 6px;
-      }
-
-      @media (max-width: 768px) {
-        .navbar {
-          flex-direction: column;
-          gap: 1rem;
-        }
-
-        .navbar-links {
-          gap: 1rem;
-        }
-
-        .hero-subtitle {
-          font-size: 1.5rem;
-        }
-
-        .hero-buttons {
-          flex-direction: column;
-          gap: 1rem;
-        }
-
-        .btn {
-          width: 100%;
-        }
-
-        .category-pills {
-          bottom: 1rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-      <a href="/" class="navbar-brand">Create</a>
-      <ul class="navbar-links">
-        <li><a href="/" class="active">Home</a></li>
-        <li><a href="/your-works">Your Works</a></li>
-        <li><a href="/settings">Settings</a></li>
-      </ul>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="wave-background"></div>
+  <section class="hero-section">
+    <div class="wave-background"></div>
+    
+    <div class="hero-content">
+      <img src="/hero-title.svg" alt="CREATE" class="hero-title-img" />
+      <div class="hero-subtitle">Upload now and Vote!</div>
       
-      <div class="hero-content">
-        <img src="/hero-title.svg" alt="CREATE" class="hero-title-img" />
-        
-        <div class="hero-subtitle">Upload now and Vote!</div>
-        
-        <div class="hero-buttons">
-          <a href="/creatives" class="btn btn-primary">See Creatives</a>
-          <a href="/learn-more" class="btn btn-secondary">Learn More</a>
-        </div>
-        
-        <p class="hero-description">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-          ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        </p>
+      <div class="hero-buttons">
+        <a href="#carousel-section" class="btn">See Creatives</a>
+        <a href="/about" class="btn">Learn More</a>
       </div>
-
-      <!-- Category Pills -->
-      <div class="category-pills">
-        <span class="pill">Short Films</span>
-        <span class="pill">Long Forms</span>
-        <span class="pill">Short Forms</span>
-        <span class="pill">Photo</span>
-        <span class="pill">Cinematography</span>
-      </div>
-    </section>
-
-    <!-- Media Carousel Section -->
-    <section class="media-carousel-section">
-      <h2 class="section-title">Featured Creatives</h2>
       
-      <div class="carousel-container">
-        <div class="carousel-wrapper" id="carouselWrapper">
-          <!-- Slide 1 -->
-          <div class="carousel-item">
-            <div class="media-card">
-              <div class="media-placeholder">
-                <span class="placeholder-icon">▶</span>
-              </div>
-              <div class="media-info">
-                <h3 class="media-title">Creative Video Title</h3>
-                <span class="media-type">Video</span>
-              </div>
-            </div>
-            <div class="media-card">
-              <div class="media-placeholder">
-                <span class="placeholder-icon">🖼</span>
-              </div>
-              <div class="media-info">
-                <h3 class="media-title">Creative Image Title</h3>
-                <span class="media-type">Image</span>
-              </div>
-            </div>
-          </div>
+      <p class="hero-description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
+        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+        ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      </p>
+    </div>
 
-          <!-- Slide 2 -->
-          <div class="carousel-item">
-            <div class="media-card">
-              <div class="media-placeholder">
-                <span class="placeholder-icon">▶</span>
-              </div>
-              <div class="media-info">
-                <h3 class="media-title">Another Video Project</h3>
-                <span class="media-type">Video</span>
-              </div>
-            </div>
-            <div class="media-card">
-              <div class="media-placeholder">
-                <span class="placeholder-icon">🖼</span>
-              </div>
-              <div class="media-info">
-                <h3 class="media-title">Photography Work</h3>
-                <span class="media-type">Image</span>
-              </div>
-            </div>
-          </div>
+    <div class="category-pills">
+      {categories.map(cat => <span class="pill">{cat}</span>)}
+    </div>
+  </section>
 
-          <!-- Slide 3 -->
-          <div class="carousel-item">
-            <div class="media-card">
-              <div class="media-placeholder">
-                <span class="placeholder-icon">▶</span>
-              </div>
-              <div class="media-info">
-                <h3 class="media-title">Short Film Showcase</h3>
-                <span class="media-type">Video</span>
-              </div>
-            </div>
-            <div class="media-card">
-              <div class="media-placeholder">
-                <span class="placeholder-icon">🖼</span>
-              </div>
-              <div class="media-info">
-                <h3 class="media-title">Digital Art Piece</h3>
-                <span class="media-type">Image</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Carousel Navigation -->
-      <div class="carousel-nav">
-        <button class="carousel-btn" id="prevBtn" onclick="moveCarousel(-1)">‹</button>
-        <div class="carousel-dots" id="dotsContainer"></div>
-        <button class="carousel-btn" id="nextBtn" onclick="moveCarousel(1)">›</button>
-      </div>
-    </section>
-
-    <script>
-      let currentSlide = 0;
-      const slides = document.querySelectorAll('.carousel-item');
-      const totalSlides = slides.length;
-      const wrapper = document.getElementById('carouselWrapper');
-      const dotsContainer = document.getElementById('dotsContainer');
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-
-      // Create dots
-      for (let i = 0; i < totalSlides; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'dot';
-        if (i === 0) dot.classList.add('active');
-        dot.onclick = () => goToSlide(i);
-        dotsContainer.appendChild(dot);
-      }
-
-      function updateCarousel() {
-        wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+  <section class="multi-carousel-section" id="carousel-section">
+    {carouselRows.map((row) => (
+      <div class="carousel-row" data-row-id={row.id}>
+        <h2 class="carousel-row-title">{row.title}</h2>
         
-        // Update dots
-        document.querySelectorAll('.dot').forEach((dot, index) => {
-          dot.classList.toggle('active', index === currentSlide);
-        });
+        <div class="carousel-row-container">
+          <button class="carousel-nav-btn carousel-nav-prev" data-direction="prev" aria-label="Previous">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
 
-        // Update button states
-        prevBtn.disabled = currentSlide === 0;
-        nextBtn.disabled = currentSlide === totalSlides - 1;
-      }
+          <div class="carousel-track-wrapper">
+            <div class="carousel-track">
+              {row.items.map((item, index) => (
+                <div class="carousel-card" data-index={index}>
+                  <MediaCard title={item.title} type={item.type} icon={item.icon} />
+                </div>
+              ))}
+            </div>
+          </div>
 
-      function moveCarousel(direction) {
-        currentSlide += direction;
-        if (currentSlide < 0) currentSlide = 0;
-        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-        updateCarousel();
-      }
+          <button class="carousel-nav-btn carousel-nav-next" data-direction="next" aria-label="Next">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+        </div>
 
-      function goToSlide(index) {
-        currentSlide = index;
-        updateCarousel();
-      }
+        <div class="carousel-pagination"></div>
+      </div>
+    ))}
 
-      // Initialize
-      updateCarousel();
-    </script>
-  </body>
-</html>
+    <div class="upload-section">
+      <h3 class="upload-title">Upload Your Creative Work</h3>
+      <p class="upload-description">
+        Share your creative projects with the community. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+      <div class="upload-container">
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-icon">📤</div>
+          <div class="upload-text">Drag & Drop your images here</div>
+          <div class="upload-subtext">or click to browse (JPG, PNG, GIF, WebP)</div>
+          <input type="file" id="fileInput" accept="image/*" multiple />
+        </div>
+        <div class="upload-preview" id="uploadPreview"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="/about" class="footer-link">About</a>
+      <a href="/developer" class="footer-link">Developer</a>
+      <a href="/copyright" class="footer-link">Copyright Law</a>
+      <a href="/faqs" class="footer-link">FAQs</a>
+    </div>
+    <div class="footer-copyright">
+      All rights reserved Kienth Justine Javines 2025
+    </div>
+  </footer>
+</BaseLayout>

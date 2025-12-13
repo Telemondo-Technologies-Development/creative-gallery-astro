@@ -1,0 +1,13 @@
+---
+const { title, type, icon } = Astro.props;
+---
+
+<div class="media-card">
+  <div class="media-placeholder">
+    <span class="placeholder-icon">{icon}</span>
+  </div>
+  <div class="media-info">
+    <h3 class="media-title">{title}</h3>
+    <span class="media-type">{type}</span>
+  </div>
+</div>
