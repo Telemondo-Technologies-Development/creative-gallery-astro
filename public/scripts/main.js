@@ -1,29 +1,12 @@
-// Type definitions
-interface UploadElements {
-  uploadArea: HTMLElement;
-  fileInput: HTMLInputElement;
-  uploadPreview: HTMLElement;
-}
-
-interface ParallaxElements {
-  heroSection: HTMLElement;
-  heroContent: HTMLElement;
-  waveBackground: HTMLElement;
-  navbar: HTMLElement;
-}
-
 // Dark Mode functionality
 class ThemeManager {
-  private themeToggle: HTMLButtonElement | null;
-  private currentTheme: string;
-
   constructor() {
-    this.themeToggle = document.getElementById('themeToggle') as HTMLButtonElement;
+    this.themeToggle = document.getElementById('themeToggle');
     this.currentTheme = this.getInitialTheme();
     this.init();
   }
 
-  private getInitialTheme(): string {
+  getInitialTheme() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
       return savedTheme;
@@ -31,7 +14,7 @@ class ThemeManager {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
-  private init(): void {
+  init() {
     this.applyTheme(this.currentTheme);
     
     if (this.themeToggle) {
@@ -45,36 +28,35 @@ class ThemeManager {
     });
   }
 
-  private toggleTheme(): void {
+  toggleTheme() {
     this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
     this.applyTheme(this.currentTheme);
     localStorage.setItem('theme', this.currentTheme);
   }
 
-  private applyTheme(theme: string): void {
+  applyTheme(theme) {
     this.currentTheme = theme;
     document.documentElement.setAttribute('data-theme', theme);
   }
 
-  public getTheme(): string {
+  getTheme() {
     return this.currentTheme;
   }
 }
 
 // Multi-Row Carousel functionality
 class MultiRowCarousel {
-  private carouselRows: Map<string, CarouselRow> = new Map();
-
   constructor() {
+    this.carouselRows = new Map();
     this.init();
   }
 
-  private init(): void {
+  init() {
     const rows = document.querySelectorAll('.carousel-row');
     rows.forEach((row) => {
-      const rowId = (row as HTMLElement).dataset.rowId;
+      const rowId = row.dataset.rowId;
       if (rowId) {
-        const carouselRow = new CarouselRow(row as HTMLElement, rowId);
+        const carouselRow = new CarouselRow(row, rowId);
         this.carouselRows.set(rowId, carouselRow);
       }
     });
@@ -82,56 +64,66 @@ class MultiRowCarousel {
 }
 
 class CarouselRow {
-  private rowElement: HTMLElement;
-  private rowId: string;
-  private track: HTMLElement;
-  private trackWrapper: HTMLElement;
-  private prevBtn: HTMLButtonElement;
-  private nextBtn: HTMLButtonElement;
-  private pagination: HTMLElement;
-  private cards: HTMLElement[];
-  
-  private currentIndex: number = 0;
-  private itemsPerView: number = 4;
-  private totalItems: number = 0;
-  private totalPages: number = 0;
-  private cardWidth: number = 0;
-  private gap: number = 20;
-  
-  private isDragging: boolean = false;
-  private startX: number = 0;
-  private currentTranslate: number = 0;
-  private prevTranslate: number = 0;
-  private animationID: number = 0;
-  
-  private wheelTimeout: number | null = null;
-
-  constructor(rowElement: HTMLElement, rowId: string) {
+  constructor(rowElement, rowId) {
     this.rowElement = rowElement;
     this.rowId = rowId;
     
-    this.track = rowElement.querySelector('.carousel-track') as HTMLElement;
-    this.trackWrapper = rowElement.querySelector('.carousel-track-wrapper') as HTMLElement;
-    this.prevBtn = rowElement.querySelector('.carousel-nav-prev') as HTMLButtonElement;
-    this.nextBtn = rowElement.querySelector('.carousel-nav-next') as HTMLButtonElement;
-    this.pagination = rowElement.querySelector('.carousel-pagination') as HTMLElement;
-    this.cards = Array.from(rowElement.querySelectorAll('.carousel-card')) as HTMLElement[];
+    this.track = rowElement.querySelector('.carousel-track');
+    this.trackWrapper = rowElement.querySelector('.carousel-track-wrapper');
+    this.prevBtn = rowElement.querySelector('.carousel-nav-prev');
+    this.nextBtn = rowElement.querySelector('.carousel-nav-next');
+    this.pagination = rowElement.querySelector('.carousel-pagination');
+    this.cards = Array.from(rowElement.querySelectorAll('.carousel-card'));
     
     this.totalItems = this.cards.length;
+    
+    this.currentIndex = 0;
+    this.itemsPerView = 4;
+    this.totalPages = 0;
+    this.cardWidth = 0;
+    this.gap = 20;
+    this.isDragging = false;
+    this.startX = 0;
+    this.currentTranslate = 0;
+    this.prevTranslate = 0;
+    this.animationID = 0;
+    this.wheelTimeout = null;
+    this.isTransitioning = false;
     
     this.init();
   }
 
-  private init(): void {
+  init() {
+    this.cloneItemsForLoop();
     this.calculateDimensions();
     this.createPagination();
     this.setupEventListeners();
+    this.setInitialPosition();
     this.updateCarousel();
     
     window.addEventListener('resize', () => this.handleResize());
   }
 
-  private calculateDimensions(): void {
+  cloneItemsForLoop() {
+    // Clone items at the end for seamless looping
+    const clonesToAdd = this.itemsPerView || 4;
+    
+    // Clone first items and append to end
+    for (let i = 0; i < clonesToAdd; i++) {
+      const clone = this.cards[i].cloneNode(true);
+      clone.classList.add('cloned');
+      this.track.appendChild(clone);
+    }
+    
+    // Clone last items and prepend to beginning
+    for (let i = this.totalItems - 1; i >= this.totalItems - clonesToAdd && i >= 0; i--) {
+      const clone = this.cards[i].cloneNode(true);
+      clone.classList.add('cloned');
+      this.track.insertBefore(clone, this.track.firstChild);
+    }
+  }
+
+  calculateDimensions() {
     const wrapperWidth = this.trackWrapper.offsetWidth;
     const computedStyle = window.getComputedStyle(this.track);
     this.gap = parseFloat(computedStyle.gap) || 20;
@@ -151,7 +143,16 @@ class CarouselRow {
     this.totalPages = Math.ceil(this.totalItems / this.itemsPerView);
   }
 
-  private createPagination(): void {
+  setInitialPosition() {
+    // Start at the first real item (after cloned items)
+    const offset = this.itemsPerView * (this.cardWidth + this.gap);
+    this.currentTranslate = -offset;
+    this.prevTranslate = -offset;
+    this.track.style.transition = 'none';
+    this.track.style.transform = `translateX(${this.currentTranslate}px)`;
+  }
+
+  createPagination() {
     this.pagination.innerHTML = '';
     
     for (let i = 0; i < this.totalPages; i++) {
@@ -164,13 +165,10 @@ class CarouselRow {
     }
   }
 
-  private setupEventListeners(): void {
+  setupEventListeners() {
     // Navigation buttons
     this.prevBtn.addEventListener('click', () => this.navigate(-1));
     this.nextBtn.addEventListener('click', () => this.navigate(1));
-    
-    // Mouse wheel scrolling
-    this.trackWrapper.addEventListener('wheel', (e) => this.handleWheel(e), { passive: false });
     
     // Drag functionality
     this.trackWrapper.addEventListener('mousedown', (e) => this.dragStart(e));
@@ -190,25 +188,7 @@ class CarouselRow {
     this.rowElement.addEventListener('keydown', (e) => this.handleKeyboard(e));
   }
 
-  private handleWheel(e: WheelEvent): void {
-    e.preventDefault();
-    
-    if (this.wheelTimeout) {
-      clearTimeout(this.wheelTimeout);
-    }
-    
-    this.wheelTimeout = window.setTimeout(() => {
-      if (e.deltaY < 0) {
-        // Scroll up = move right (previous)
-        this.navigate(-1);
-      } else if (e.deltaY > 0) {
-        // Scroll down = move left (next)
-        this.navigate(1);
-      }
-    }, 50);
-  }
-
-  private dragStart(e: MouseEvent | TouchEvent): void {
+  dragStart(e) {
     this.isDragging = true;
     this.trackWrapper.classList.add('grabbing');
     
@@ -220,7 +200,7 @@ class CarouselRow {
     this.track.style.transition = 'none';
   }
 
-  private drag(e: MouseEvent | TouchEvent): void {
+  drag(e) {
     if (!this.isDragging) return;
     
     const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;
@@ -228,7 +208,7 @@ class CarouselRow {
     this.currentTranslate = this.prevTranslate + diff;
   }
 
-  private dragEnd(): void {
+  dragEnd() {
     if (!this.isDragging) return;
     
     this.isDragging = false;
@@ -238,24 +218,24 @@ class CarouselRow {
     const movedBy = this.currentTranslate - this.prevTranslate;
     const threshold = this.cardWidth / 3;
     
-    if (movedBy < -threshold && this.currentIndex < this.totalPages - 1) {
-      this.currentIndex++;
-    } else if (movedBy > threshold && this.currentIndex > 0) {
-      this.currentIndex--;
+    if (movedBy < -threshold) {
+      this.navigate(1);
+    } else if (movedBy > threshold) {
+      this.navigate(-1);
+    } else {
+      this.track.style.transition = 'transform 0.35s ease-out';
+      this.updateCarousel();
     }
-    
-    this.track.style.transition = 'transform 0.35s ease-out';
-    this.updateCarousel();
   }
 
-  private animation(): void {
+  animation() {
     if (this.isDragging) {
       this.track.style.transform = `translateX(${this.currentTranslate}px)`;
       requestAnimationFrame(() => this.animation());
     }
   }
 
-  private handleKeyboard(e: KeyboardEvent): void {
+  handleKeyboard(e) {
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
       this.navigate(-1);
@@ -265,22 +245,65 @@ class CarouselRow {
     }
   }
 
-  private navigate(direction: number): void {
-    const newIndex = this.currentIndex + direction;
+  navigate(direction) {
+    if (this.isTransitioning) return;
     
-    if (newIndex >= 0 && newIndex < this.totalPages) {
-      this.currentIndex = newIndex;
-      this.updateCarousel();
-    }
+    this.isTransitioning = true;
+    this.currentIndex += direction;
+    
+    // Enable transition for the move
+    this.track.style.transition = 'transform 0.35s ease-out';
+    this.updateCarousel();
+    
+    // Handle infinite loop wrapping after transition
+    const transitionEndHandler = () => {
+      if (this.currentIndex >= this.totalPages) {
+        this.track.style.transition = 'none';
+        this.currentIndex = 0;
+        this.setInitialPosition();
+        this.updateCarouselWithoutTransition();
+        requestAnimationFrame(() => {
+          this.track.style.transition = 'transform 0.35s ease-out';
+          this.isTransitioning = false;
+        });
+      } else if (this.currentIndex < 0) {
+        this.track.style.transition = 'none';
+        this.currentIndex = this.totalPages - 1;
+        const offset = this.itemsPerView * (this.cardWidth + this.gap);
+        const translateX = -(this.currentIndex * this.itemsPerView * (this.cardWidth + this.gap)) - offset;
+        this.currentTranslate = translateX;
+        this.prevTranslate = translateX;
+        this.track.style.transform = `translateX(${translateX}px)`;
+        this.updateCarouselWithoutTransition();
+        requestAnimationFrame(() => {
+          this.track.style.transition = 'transform 0.35s ease-out';
+          this.isTransitioning = false;
+        });
+      } else {
+        this.isTransitioning = false;
+      }
+    };
+    
+    // Use setTimeout as fallback in case transitionend doesn't fire
+    this.track.removeEventListener('transitionend', this.transitionEndHandler);
+    this.transitionEndHandler = transitionEndHandler;
+    this.track.addEventListener('transitionend', transitionEndHandler, { once: true });
+    
+    setTimeout(() => {
+      if (this.isTransitioning) {
+        transitionEndHandler();
+      }
+    }, 400);
   }
 
-  private goToPage(pageIndex: number): void {
+  goToPage(pageIndex) {
     this.currentIndex = pageIndex;
     this.updateCarousel();
   }
 
-  private updateCarousel(): void {
-    const translateX = -(this.currentIndex * this.itemsPerView * (this.cardWidth + this.gap));
+  updateCarousel() {
+    const offset = this.itemsPerView * (this.cardWidth + this.gap);
+    const translateX = -(this.currentIndex * this.itemsPerView * (this.cardWidth + this.gap)) - offset;
     this.currentTranslate = translateX;
     this.prevTranslate = translateX;
     
@@ -288,26 +311,36 @@ class CarouselRow {
     
     // Update pagination
     const dots = this.pagination.querySelectorAll('.pagination-dot');
+    const actualIndex = ((this.currentIndex % this.totalPages) + this.totalPages) % this.totalPages;
     dots.forEach((dot, index) => {
-      dot.classList.toggle('active', index === this.currentIndex);
+      dot.classList.toggle('active', index === actualIndex);
     });
     
-    // Update button states
-    this.prevBtn.disabled = this.currentIndex === 0;
-    this.nextBtn.disabled = this.currentIndex === this.totalPages - 1;
+    // Buttons always enabled for infinite loop
+    this.prevBtn.disabled = false;
+    this.nextBtn.disabled = false;
     
     // Lazy load images
     this.lazyLoadImages();
   }
 
-  private lazyLoadImages(): void {
+  updateCarouselWithoutTransition() {
+    // Update pagination only
+    const dots = this.pagination.querySelectorAll('.pagination-dot');
+    const actualIndex = ((this.currentIndex % this.totalPages) + this.totalPages) % this.totalPages;
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === actualIndex);
+    });
+  }
+
+  lazyLoadImages() {
     const startIndex = this.currentIndex * this.itemsPerView;
     const endIndex = Math.min(startIndex + this.itemsPerView + 2, this.totalItems);
     
     for (let i = startIndex; i < endIndex; i++) {
       const card = this.cards[i];
       if (card) {
-        const img = card.querySelector('img[data-src]') as HTMLImageElement;
+        const img = card.querySelector('img[data-src]');
         if (img && img.dataset.src) {
           img.src = img.dataset.src;
           img.removeAttribute('data-src');
@@ -316,37 +349,42 @@ class CarouselRow {
     }
   }
 
-  private handleResize(): void {
+  handleResize() {
+    // Remove old clones
+    const clonedElements = this.track.querySelectorAll('.cloned');
+    clonedElements.forEach(el => el.remove());
+    
+    // Recalculate and re-clone
     this.calculateDimensions();
+    this.cloneItemsForLoop();
     this.createPagination();
     
     // Reset to first page if current page is out of bounds
     if (this.currentIndex >= this.totalPages) {
-      this.currentIndex = Math.max(0, this.totalPages - 1);
+      this.currentIndex = 0;
     }
     
+    this.setInitialPosition();
     this.updateCarousel();
   }
 }
 
 // Upload functionality
 class ImageUploader {
-  private uploadedFiles: File[] = [];
-  private elements: UploadElements;
-
   constructor() {
+    this.uploadedFiles = [];
     this.elements = {
-      uploadArea: document.getElementById('uploadArea') as HTMLElement,
-      fileInput: document.getElementById('fileInput') as HTMLInputElement,
-      uploadPreview: document.getElementById('uploadPreview') as HTMLElement
+      uploadArea: document.getElementById('uploadArea'),
+      fileInput: document.getElementById('fileInput'),
+      uploadPreview: document.getElementById('uploadPreview')
     };
     
     this.init();
   }
 
-  private init(): void {
+  init() {
     this.elements.uploadArea.addEventListener('click', () => this.elements.fileInput.click());
-    this.elements.fileInput.addEventListener('change', (e) => this.handleFiles((e.target as HTMLInputElement).files));
+    this.elements.fileInput.addEventListener('change', (e) => this.handleFiles(e.target.files));
     
     this.elements.uploadArea.addEventListener('dragover', (e) => {
       e.preventDefault();
@@ -364,7 +402,7 @@ class ImageUploader {
     });
   }
 
-  private handleFiles(files: FileList | null | undefined): void {
+  handleFiles(files) {
     if (!files) return;
     
     Array.from(files).forEach(file => {
@@ -375,15 +413,15 @@ class ImageUploader {
     });
   }
 
-  private displayPreview(file: File): void {
+  displayPreview(file) {
     const reader = new FileReader();
     
-    reader.onload = (e: ProgressEvent<FileReader>) => {
+    reader.onload = (e) => {
       const previewItem = document.createElement('div');
       previewItem.className = 'preview-item';
       
       const img = document.createElement('img');
-      img.src = e.target?.result as string;
+      img.src = e.target?.result;
       
       const removeBtn = document.createElement('button');
       removeBtn.className = 'preview-remove';
@@ -405,16 +443,13 @@ class ImageUploader {
 
 // Parallax scrolling
 class ParallaxScroller {
-  private ticking: boolean = false;
-  private elements: ParallaxElements;
-  private carouselSection: HTMLElement | null;
-
   constructor() {
+    this.ticking = false;
     this.elements = {
-      heroSection: document.querySelector('.hero-section') as HTMLElement,
-      heroContent: document.querySelector('.hero-content') as HTMLElement,
-      waveBackground: document.querySelector('.wave-background') as HTMLElement,
-      navbar: document.querySelector('.navbar') as HTMLElement
+      heroSection: document.querySelector('.hero-section'),
+      heroContent: document.querySelector('.hero-content'),
+      waveBackground: document.querySelector('.wave-background'),
+      navbar: document.querySelector('.navbar')
     };
     
     this.carouselSection = document.querySelector('.multi-carousel-section');
@@ -422,14 +457,14 @@ class ParallaxScroller {
     this.init();
   }
 
-  private init(): void {
+  init() {
     window.addEventListener('scroll', () => this.requestTick());
     this.setupMouseParallax();
     // Trigger initial check for visible elements
     this.updateParallax();
   }
 
-  private updateParallax(): void {
+  updateParallax() {
     const scrolled = window.pageYOffset;
     const heroHeight = this.elements.heroSection.offsetHeight;
     
@@ -447,29 +482,29 @@ class ParallaxScroller {
     this.ticking = false;
   }
 
-  private requestTick(): void {
+  requestTick() {
     if (!this.ticking) {
       window.requestAnimationFrame(() => this.updateParallax());
       this.ticking = true;
     }
   }
 
-  private setupMouseParallax(): void {
-    this.elements.heroSection.addEventListener('mousemove', (e: MouseEvent) => {
+  setupMouseParallax() {
+    this.elements.heroSection.addEventListener('mousemove', (e) => {
       const { clientX, clientY } = e;
       const { offsetWidth, offsetHeight } = this.elements.heroSection;
       
       const xPos = (clientX / offsetWidth - 0.5) * 20;
       const yPos = (clientY / offsetHeight - 0.5) * 20;
       
-      const heroTitleImg = document.querySelector('.hero-title-img') as HTMLElement;
+      const heroTitleImg = document.querySelector('.hero-title-img');
       if (heroTitleImg) {
         heroTitleImg.style.transform = `translate(${xPos}px, ${yPos}px)`;
       }
     });
 
     this.elements.heroSection.addEventListener('mouseleave', () => {
-      const heroTitleImg = document.querySelector('.hero-title-img') as HTMLElement;
+      const heroTitleImg = document.querySelector('.hero-title-img');
       if (heroTitleImg) {
         heroTitleImg.style.transform = 'translate(0, 0)';
       }
@@ -479,11 +514,9 @@ class ParallaxScroller {
 
 // Scroll animation observer
 class ScrollAnimator {
-  private observer: IntersectionObserver;
-
   constructor() {
     this.observer = new IntersectionObserver(
-      (entries: IntersectionObserverEntry[]) => {
+      (entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
@@ -499,7 +532,7 @@ class ScrollAnimator {
     this.init();
   }
 
-  private init(): void {
+  init() {
     const sectionTitle = document.querySelector('.section-title');
     const uploadSection = document.querySelector('.upload-section');
     
@@ -510,17 +543,17 @@ class ScrollAnimator {
     this.setupSmoothScroll();
   }
 
-  private staggerMediaCards(): void {
+  staggerMediaCards() {
     document.querySelectorAll('.media-card').forEach((card, index) => {
-      (card as HTMLElement).style.animationDelay = `${index * 0.1}s`;
+      card.style.animationDelay = `${index * 0.1}s`;
     });
   }
 
-  private setupSmoothScroll(): void {
-    document.querySelectorAll('a[href^="#"]').forEach((anchor: Element) => {
-      anchor.addEventListener('click', (e: Event) => {
+  setupSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', (e) => {
         e.preventDefault();
-        const href = (anchor as HTMLAnchorElement).getAttribute('href');
+        const href = anchor.getAttribute('href');
         const target = href ? document.querySelector(href) : null;
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
