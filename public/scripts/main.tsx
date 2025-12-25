@@ -12,6 +12,55 @@ interface ParallaxElements {
   navbar: HTMLElement;
 }
 
+// Dark Mode functionality
+class ThemeManager {
+  private themeToggle: HTMLButtonElement | null;
+  private currentTheme: string;
+
+  constructor() {
+    this.themeToggle = document.getElementById('themeToggle') as HTMLButtonElement;
+    this.currentTheme = this.getInitialTheme();
+    this.init();
+  }
+
+  private getInitialTheme(): string {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      return savedTheme;
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  private init(): void {
+    this.applyTheme(this.currentTheme);
+    
+    if (this.themeToggle) {
+      this.themeToggle.addEventListener('click', () => this.toggleTheme());
+    }
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        this.applyTheme(e.matches ? 'dark' : 'light');
+      }
+    });
+  }
+
+  private toggleTheme(): void {
+    this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+    this.applyTheme(this.currentTheme);
+    localStorage.setItem('theme', this.currentTheme);
+  }
+
+  private applyTheme(theme: string): void {
+    this.currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+
+  public getTheme(): string {
+    return this.currentTheme;
+  }
+}
+
 // Multi-Row Carousel functionality
 class MultiRowCarousel {
   private carouselRows: Map<string, CarouselRow> = new Map();
@@ -483,6 +532,7 @@ class ScrollAnimator {
 
 // Initialize all modules after DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
+  const themeManager = new ThemeManager();
   const multiCarousel = new MultiRowCarousel();
   const uploader = new ImageUploader();
   const parallax = new ParallaxScroller();
