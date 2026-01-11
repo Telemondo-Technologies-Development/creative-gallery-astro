@@ -1,13 +1,16 @@
 ---
-const { title, type, icon } = Astro.props;
+const { videoSrc, title, uploadDate, genre } = Astro.props;
 ---
 
-<div class="media-card">
+<div class="media-card" data-title={title} data-upload-date={uploadDate} data-genre={genre}>
   <div class="media-placeholder">
-    <span class="placeholder-icon">{icon}</span>
+    {videoSrc ? (
+      <video src={videoSrc} muted loop playsinline preload="metadata"></video>
+    ) : (
+      <span class="placeholder-icon">▶</span>
+    )}
   </div>
   <div class="media-info">
-    <h3 class="media-title">{title}</h3>
-    <span class="media-type">{type}</span>
+    <h3 class="media-title">video</h3>
   </div>
 </div>

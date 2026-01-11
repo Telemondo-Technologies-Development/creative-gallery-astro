@@ -6,72 +6,55 @@ import MediaCard from '../components/MediaCard.astro';
 const carouselRows = [
   {
     id: 'row-1',
-    title: 'Trending Projects',
+    title: 'After Effects Edit',
     items: [
-      { title: 'Creative Video Title', type: 'Video', icon: '▶' },
-      { title: 'Creative Image Title', type: 'Image', icon: '🖼' },
-      { title: 'Documentary Short', type: 'Video', icon: '▶' },
-      { title: 'Abstract Design', type: 'Image', icon: '🖼' },
-      { title: 'Motion Graphics', type: 'Video', icon: '▶' },
-      { title: 'Brand Identity', type: 'Image', icon: '🖼' },
-      { title: 'Film Reel', type: 'Video', icon: '▶' },
-      { title: 'Photography Series', type: 'Image', icon: '🖼' }
+      { videoSrc: '/videos/1.mp4', title: 'Villian', uploadDate: 'Dec 28, 2024', genre: 'Movie AMV' },
+      { videoSrc: '/videos/2.mp4', title: 'M3 MoGraph', uploadDate: 'Dec 30, 2024', genre: 'Car Edit' },
+      { videoSrc: '/videos/3.mp4', title: 'Cinematic', uploadDate: 'Jan 2, 2025', genre: 'Documentary' },
+      { videoSrc: '/videos/4.mp4', title: 'Abstract Visuals', uploadDate: 'Jan 3, 2025', genre: 'Experimental' },
+      { videoSrc: '/videos/5.mp4', title: 'Abstract Visuals', uploadDate: 'Jan 4, 2025', genre: 'Experimental' }
     ]
   },
   {
     id: 'row-2',
-    title: 'Featured Creatives',
+    title: 'After Effects Edit 2',
     items: [
-      { title: 'Another Video Project', type: 'Video', icon: '▶' },
-      { title: 'Photography Work', type: 'Image', icon: '🖼' },
-      { title: 'Urban Landscapes', type: 'Image', icon: '🖼' },
-      { title: 'Digital Illustration', type: 'Image', icon: '🖼' },
-      { title: 'Short Film', type: 'Video', icon: '▶' },
-      { title: 'Product Design', type: 'Image', icon: '🖼' },
-      { title: 'Animation Loop', type: 'Video', icon: '▶' },
-      { title: 'Editorial Design', type: 'Image', icon: '🖼' }
+      { videoSrc: '/videos/6.mp4', title: 'Night City', uploadDate: 'Dec 25, 2024', genre: 'Cinematography' },
+      { videoSrc: '/videos/7.mp4', title: 'Dance Performance', uploadDate: 'Dec 27, 2024', genre: 'Performance' },
+      { videoSrc: '/videos/8.mp4', title: 'Tech Review', uploadDate: 'Dec 29, 2024', genre: 'Review' },
+      { videoSrc: '/videos/9.mp4', title: 'Nature Walk', uploadDate: 'Jan 1, 2025', genre: 'Documentary' },
+      { videoSrc: '/videos/10.mp4', title: 'Music Video', uploadDate: 'Jan 2, 2025', genre: 'Music' }
     ]
   },
   {
     id: 'row-3',
-    title: 'Popular This Week',
+    title: 'After Effects Edit 3',
     items: [
-      { title: 'Short Film Showcase', type: 'Video', icon: '▶' },
-      { title: 'Digital Art Piece', type: 'Image', icon: '🖼' },
-      { title: 'Cinematic Reel', type: 'Video', icon: '▶' },
-      { title: 'UI/UX Design', type: 'Image', icon: '🖼' },
-      { title: 'Music Video', type: 'Video', icon: '▶' },
-      { title: 'Typography Work', type: 'Image', icon: '🖼' },
-      { title: 'Commercial Spot', type: 'Video', icon: '▶' },
-      { title: 'Packaging Design', type: 'Image', icon: '🖼' }
+      { videoSrc: '/videos/11.mp4', title: 'Fashion Film', uploadDate: 'Dec 20, 2024', genre: 'Fashion' },
+      { videoSrc: '/videos/12.mp4', title: 'Food Journey', uploadDate: 'Dec 22, 2024', genre: 'Food' },
+      { videoSrc: '/videos/13.mp4', title: 'Travel Vlog', uploadDate: 'Dec 24, 2024', genre: 'Travel' },
+      { videoSrc: '/videos/14.mp4', title: 'Art Process', uploadDate: 'Dec 26, 2024', genre: 'Art' },
+      { videoSrc: '/videos/15.mp4', title: 'Behind The Scenes', uploadDate: 'Dec 28, 2024', genre: 'BTS' }
     ]
   },
   {
     id: 'row-4',
-    title: 'Recommended For You',
+    title: 'Premiere Edit',
     items: [
-      { title: 'Portrait Series', type: 'Image', icon: '🖼' },
-      { title: 'Animation Project', type: 'Video', icon: '▶' },
-      { title: 'Abstract Art', type: 'Image', icon: '🖼' },
-      { title: 'Documentary', type: 'Video', icon: '▶' },
-      { title: 'Fashion Photography', type: 'Image', icon: '🖼' },
-      { title: '3D Rendering', type: 'Image', icon: '🖼' },
-      { title: 'Explainer Video', type: 'Video', icon: '▶' },
-      { title: 'Logo Design', type: 'Image', icon: '🖼' }
+      { videoSrc: '/videos/16.mp4', title: 'Sports Highlight', uploadDate: 'Dec 15, 2024', genre: 'Sports' },
+      { videoSrc: '/videos/17.mp4', title: 'Architecture Tour', uploadDate: 'Dec 18, 2024', genre: 'Architecture' },
+      { videoSrc: '/videos/18.mp4', title: 'Interview Series', uploadDate: 'Dec 21, 2024', genre: 'Interview' },
+      { videoSrc: '/videos/19.mp4', title: 'Time Lapse', uploadDate: 'Dec 23, 2024', genre: 'Time Lapse' },
+      { videoSrc: '/videos/20.mp4', title: 'Event Coverage', uploadDate: 'Dec 25, 2024', genre: 'Event' }
     ]
   },
   {
     id: 'row-5',
-    title: 'Latest Uploads',
+    title: 'Premiere Edit',
     items: [
-      { title: 'Music Video', type: 'Video', icon: '▶' },
-      { title: 'Nature Photography', type: 'Image', icon: '🖼' },
-      { title: 'Behind the Scenes', type: 'Video', icon: '▶' },
-      { title: 'Poster Design', type: 'Image', icon: '🖼' },
-      { title: 'Time Lapse', type: 'Video', icon: '▶' },
-      { title: 'Architecture Photo', type: 'Image', icon: '🖼' },
-      { title: 'Promo Video', type: 'Video', icon: '▶' },
-      { title: 'Web Design', type: 'Image', icon: '🖼' }
+      { videoSrc: '/videos/21.mp4', title: 'Tutorial Series', uploadDate: 'Jan 4, 2025', genre: 'Tutorial' },
+      { videoSrc: '/videos/22.mp4', title: 'Lifestyle Vlog', uploadDate: 'Jan 5, 2025', genre: 'Lifestyle' },
+      { videoSrc: '/videos/23.mp4', title: 'Creative Process', uploadDate: 'Jan 5, 2025', genre: 'Creative' }
     ]
   }
 ];
@@ -122,7 +105,7 @@ const categories = ['Short Films', 'Long Forms', 'Short Forms', 'Photo', 'Cinema
             <div class="carousel-track">
               {row.items.map((item, index) => (
                 <div class="carousel-card" data-index={index}>
-                  <MediaCard title={item.title} type={item.type} icon={item.icon} />
+                  <MediaCard videoSrc={item.videoSrc} title={item.title} uploadDate={item.uploadDate} genre={item.genre} />
                 </div>
               ))}
             </div>
@@ -138,22 +121,6 @@ const categories = ['Short Films', 'Long Forms', 'Short Forms', 'Photo', 'Cinema
         <div class="carousel-pagination"></div>
       </div>
     ))}
-
-    <div class="upload-section">
-      <h3 class="upload-title">Upload Your Creative Work</h3>
-      <p class="upload-description">
-        Share your creative projects with the community. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </p>
-      <div class="upload-container">
-        <div class="upload-area" id="uploadArea">
-          <div class="upload-icon">📤</div>
-          <div class="upload-text">Drag & Drop your images here</div>
-          <div class="upload-subtext">or click to browse (JPG, PNG, GIF, WebP)</div>
-          <input type="file" id="fileInput" accept="image/*" multiple />
-        </div>
-        <div class="upload-preview" id="uploadPreview"></div>
-      </div>
-    </div>
   </section>
 
   <footer class="site-footer">

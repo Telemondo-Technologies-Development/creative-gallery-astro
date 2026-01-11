@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+---
+
+<BaseLayout title="Developer — Creative Gallery">
+  <Navbar />
+
+  <section class="developer-section">
+    <div class="developer-container">
+      <div class="developer-photo">
+        <div class="photo-placeholder">
+          <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="45" r="20" fill="currentColor" opacity="0.3"/>
+            <path d="M30 90 Q60 75 90 90 L90 120 L30 120 Z" fill="currentColor" opacity="0.3"/>
+          </svg>
+        </div>
+      </div>
+      
+      <div class="developer-info">
+        <h1 class="developer-title">Developer</h1>
+        <p class="developer-text">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+        </p>
+        <p class="developer-text">
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="/about" class="footer-link">About</a>
+      <a href="/developer" class="footer-link">Developer</a>
+      <a href="/copyright" class="footer-link">Copyright Law</a>
+      <a href="/faqs" class="footer-link">FAQs</a>
+    </div>
+    <div class="footer-copyright">
+      All rights reserved Kienth Justine Javines 2025
+    </div>
+  </footer>
+</BaseLayout>

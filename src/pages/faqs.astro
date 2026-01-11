@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+---
+
+<BaseLayout title="FAQs — Creative Gallery">
+  <Navbar />
+
+  <section class="faqs-section">
+    <div class="faqs-container">
+      <h1 class="faqs-title">Frequently Asked Questions</h1>
+      
+      <div class="faqs-content">
+        <div class="faq-item">
+          <h2 class="faq-question">What programs are you using?</h2>
+          <p class="faq-answer">
+            I primarily use Adobe Premiere Pro, After Effects, and DaVinci Resolve for my video editing and post-production work.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h2 class="faq-question">When did you start editing?</h2>
+          <p class="faq-answer">
+            I started my journey in video editing back in 2019.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h2 class="faq-question">Are you working as a creative freelancer?</h2>
+          <p class="faq-answer">
+            Yes, I work as a creative freelancer, taking on various video editing and creative projects.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h2 class="faq-question">Why did you choose Computer Science instead of Multimedia Arts or any creative courses?</h2>
+          <p class="faq-answer">
+            I consider software engineering as an art as well, and I wanted to learn things that I don't know. Computer Science allows me to combine technical skills with creative problem-solving, giving me a unique perspective in both fields.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="/about" class="footer-link">About</a>
+      <a href="/developer" class="footer-link">Developer</a>
+      <a href="/copyright" class="footer-link">Copyright Law</a>
+      <a href="/faqs" class="footer-link">FAQs</a>
+    </div>
+    <div class="footer-copyright">
+      All rights reserved Kienth Justine Javines 2025
+    </div>
+  </footer>
+</BaseLayout>
