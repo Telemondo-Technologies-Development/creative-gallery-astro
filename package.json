@@ -7,10 +7,12 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "deploy": "npm run build && wrangler pages deploy ./dist --project-name=creative-gallery-astro --branch=main"
   },
   "devDependencies": {
     "astro": "^4.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "wrangler": "^4.58.0"
   }
 }
